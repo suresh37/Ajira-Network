@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import com.network.model.Node;
 import com.network.utils.AppConstants;
@@ -94,7 +95,42 @@ public class NetworkService {
 			return AppConstants.ERROR_ROUTE_CANNOT_BE_CALCULATED;
 		}
 
+		Stack<Node> infoRoutesPath = new Stack<Node>();
+		Stack<Node> infoRoutes = new Stack<Node>();
+		List<String> visitedNodes = new ArrayList<String>();
+
+		infoRouteDFS(infoRoutesPath, infoRoutes, visitedNodes, startNode, endNode);
+		System.out.println(infoRoutesPath);
 		return null;
+	}
+
+	private void infoRouteDFS(Stack<Node> infoRoutesPath, Stack<Node> infoRoutes, List<String> visitedNodes,
+			Node startNode, Node endNode) {
+		infoRoutes.push(startNode);
+
+		if (startNode.equals(endNode)) {
+			infoRoutes.forEach(n -> infoRoutesPath.push(n));
+		}
+
+		visitedNodes.add(startNode.getName());
+
+		// Traverse the node for the matching end node
+		List<Node> snConnections = this.networkMap.get(startNode.getName());
+		if (snConnections.size() > 0) {
+
+			for (Node node : snConnections) {
+
+				// Check if the child node is already visited
+				if (visitedNodes.contains(node.getName()) == false) {
+					// Recursively search for non visited child node
+					infoRouteDFS(infoRoutesPath, infoRoutes, visitedNodes, node, endNode);
+				}
+			}
+
+		}
+
+		infoRoutes.pop();
+
 	}
 
 }

@@ -39,7 +39,10 @@ public class NetworkMain {
 					networkService.findInfoRoute(node1, node2);
 					break;
 				case 4:
-					// setDeviceStrength();
+					System.out.println("Enter Node Name and Strength");
+					node1 = sc.next();
+					Integer strength = Integer.parseInt(sc.next());
+					networkService.setDeviceStrength(node1, strength);
 					break;
 				case 5:
 					System.exit(0);
